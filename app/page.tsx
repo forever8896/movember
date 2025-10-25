@@ -31,7 +31,6 @@ export default function Home() {
   const [uploadStatus, setUploadStatus] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [taggedFriend, setTaggedFriend] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const movemberStatus = getMovemberStatus();
@@ -79,7 +78,7 @@ export default function Home() {
     setError("");
 
     try {
-      const shareText = getEarlyBirdShareText(taggedFriend);
+      const shareText = getEarlyBirdShareText();
       const appUrl = process.env.NEXT_PUBLIC_URL || "https://movember-lime.vercel.app";
 
       const result = await sdk.actions.composeCast({
@@ -97,11 +96,8 @@ export default function Home() {
           body: JSON.stringify({
             fid: authData?.user?.fid,
             castHash: result.cast.hash,
-            taggedFriend,
           }),
         });
-
-        setTaggedFriend("");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to post commitment");
@@ -222,14 +218,6 @@ export default function Home() {
             </p>
 
             <div className={styles.form}>
-              <input
-                type="text"
-                placeholder="Tag a friend (optional)"
-                value={taggedFriend}
-                onChange={(e) => setTaggedFriend(e.target.value)}
-                className={styles.input}
-              />
-
               {error && <p className={styles.error}>{error}</p>}
               {success && <p className={styles.success}>{success}</p>}
 
