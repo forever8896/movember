@@ -2,7 +2,15 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuickAuth, useMiniKit } from "@coinbase/onchainkit/minikit";
 import { sdk } from "@farcaster/miniapp-sdk";
-import { getMovemberStatus, getShareText, getMovemberDonationLink } from "../lib/movember";
+import Image from "next/image";
+import {
+  getMovemberStatus,
+  getShareText,
+  getMovemberDonationLink,
+  isEarlyBird,
+  getDaysUntilMovember,
+  getEarlyBirdShareText,
+} from "../lib/movember";
 import styles from "./page.module.css";
 
 interface AuthResponse {
@@ -23,9 +31,12 @@ export default function Home() {
   const [uploadStatus, setUploadStatus] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [taggedFriend, setTaggedFriend] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const movemberStatus = getMovemberStatus();
+  const earlyBird = isEarlyBird();
+  const daysUntil = getDaysUntilMovember();
 
   // Initialize the miniapp
   useEffect(() => {
@@ -43,13 +54,11 @@ export default function Home() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
     if (!file.type.startsWith("image/")) {
       setError("Please select an image file");
       return;
     }
 
-    // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       setError("Image must be less than 5MB");
       return;
@@ -58,12 +67,48 @@ export default function Home() {
     setError("");
     setImageFile(file);
 
-    // Create preview
     const reader = new FileReader();
     reader.onload = (event) => {
       setSelectedImage(event.target?.result as string);
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleEarlyBirdCommitment = async () => {
+    setUploading(true);
+    setError("");
+
+    try {
+      const shareText = getEarlyBirdShareText(taggedFriend);
+      const appUrl = process.env.NEXT_PUBLIC_URL || "https://movember-lime.vercel.app";
+
+      const result = await sdk.actions.composeCast({
+        text: shareText,
+        embeds: [appUrl],
+      });
+
+      if (result?.cast) {
+        setSuccess("Commitment posted! You're an early bird 🐦");
+
+        // Create early bird NFT
+        await fetch("/api/early-bird", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            fid: authData?.user?.fid,
+            castHash: result.cast.hash,
+            taggedFriend,
+          }),
+        });
+
+        setTaggedFriend("");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to post commitment");
+      console.error("Early bird error:", err);
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleShare = async () => {
@@ -82,7 +127,6 @@ export default function Home() {
     setUploadStatus("Transforming your photo with AI...");
 
     try {
-      // Upload image and transform with Gemini
       const formData = new FormData();
       formData.append("file", imageFile);
       formData.append("day", movemberStatus.currentDay.toString());
@@ -107,7 +151,6 @@ export default function Home() {
         metadataUrl,
       } = await uploadResponse.json();
 
-      // Compose cast with AI-transformed image and donation link
       const shareText = getShareText(movemberStatus.currentDay);
       const donationLink = getMovemberDonationLink();
 
@@ -119,7 +162,6 @@ export default function Home() {
       if (result?.cast) {
         setSuccess(`Day ${movemberStatus.currentDay} posted! Your AI art is on-chain.`);
 
-        // Track the post with all metadata
         await fetch("/api/progress", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -133,7 +175,6 @@ export default function Home() {
           }),
         });
 
-        // Reset form
         setSelectedImage(null);
         setImageFile(null);
         if (fileInputRef.current) {
@@ -149,22 +190,61 @@ export default function Home() {
     }
   };
 
-  // Not November yet
-  if (!movemberStatus.isNovember) {
+  // Early Bird Mode
+  if (earlyBird) {
     return (
       <div className={styles.container}>
         <div className={styles.content}>
-          <div className={styles.waitlistForm}>
-            <h1 className={styles.title}>BASE MOVEMBER</h1>
+          <div className={styles.card}>
+            <Image
+              src="/logo.png"
+              alt="Based Movember"
+              width={80}
+              height={80}
+              className={styles.logo}
+            />
+
+            <h1 className={styles.title}>Based Movember</h1>
+
+            <div className={styles.badge}>Early Bird</div>
+
             <p className={styles.subtitle}>
               Hey {context?.user?.displayName || "there"}!
             </p>
-            <p className={styles.subtitle}>
-              Movember starts November 1st. Come back then to snap your mustache,
-              share daily, and earn NFTs for mens health!
-            </p>
+
             <div className={styles.countdown}>
-              <p>Movember begins in November</p>
+              <div className={styles.countdownNumber}>{daysUntil}</div>
+              <div className={styles.countdownLabel}>Days Until Movember</div>
+            </div>
+
+            <p className={styles.subtitle}>
+              Commit early and earn your exclusive Early Bird NFT
+            </p>
+
+            <div className={styles.form}>
+              <input
+                type="text"
+                placeholder="Tag a friend (optional)"
+                value={taggedFriend}
+                onChange={(e) => setTaggedFriend(e.target.value)}
+                className={styles.input}
+              />
+
+              {error && <p className={styles.error}>{error}</p>}
+              {success && <p className={styles.success}>{success}</p>}
+
+              <button
+                type="button"
+                onClick={handleEarlyBirdCommitment}
+                disabled={uploading || isAuthLoading}
+                className={styles.button}
+              >
+                {uploading ? "Posting..." : "I'm In! Share Commitment"}
+              </button>
+
+              <p className={styles.helperText}>
+                Share your commitment and receive an Early Bird NFT
+              </p>
             </div>
           </div>
         </div>
@@ -172,17 +252,29 @@ export default function Home() {
     );
   }
 
+  // November Mode
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        <div className={styles.waitlistForm}>
-          <h1 className={styles.title}>BASE MOVEMBER</h1>
+        <div className={styles.card}>
+          <Image
+            src="/logo.png"
+            alt="Based Movember"
+            width={80}
+            height={80}
+            className={styles.logo}
+          />
+
+          <h1 className={styles.title}>Based Movember</h1>
+
           <p className={styles.subtitle}>
             Hey {context?.user?.displayName || "there"}!
           </p>
+
           <p className={styles.dayCounter}>
             Day {movemberStatus.currentDay} of 30
           </p>
+
           <p className={styles.subtitle}>
             Snap your mustache and share to support mens health
           </p>
@@ -232,7 +324,7 @@ export default function Home() {
               type="button"
               onClick={handleShare}
               disabled={!imageFile || uploading || isAuthLoading}
-              className={styles.joinButton}
+              className={styles.button}
             >
               {uploading ? uploadStatus || "Processing..." : "Share to Feed"}
             </button>
