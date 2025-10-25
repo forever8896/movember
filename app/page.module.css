@@ -370,10 +370,22 @@
 }
 
 .secondaryButton {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
   background: transparent;
   color: var(--text-primary);
   border: 2px solid var(--border-strong);
   box-shadow: none;
+  padding: 1.25rem 3rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none;
 }
 
 .secondaryButton:hover {
@@ -381,6 +393,7 @@
   border-color: var(--base-blue);
   color: var(--base-blue);
   box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
 }
 
 /* Status Messages */

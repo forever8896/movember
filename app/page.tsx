@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useQuickAuth, useMiniKit } from "@coinbase/onchainkit/minikit";
 import { sdk } from "@farcaster/miniapp-sdk";
 import Image from "next/image";
+import Link from "next/link";
 import {
   getMovemberStatus,
   getShareText,
@@ -31,6 +32,7 @@ export default function Home() {
   const [uploadStatus, setUploadStatus] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [taggedFriend, setTaggedFriend] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const movemberStatus = getMovemberStatus();
@@ -218,6 +220,14 @@ export default function Home() {
             </p>
 
             <div className={styles.form}>
+              <input
+                type="text"
+                placeholder="Tag a friend (optional)"
+                value={taggedFriend}
+                onChange={(e) => setTaggedFriend(e.target.value)}
+                className={styles.input}
+              />
+
               {error && <p className={styles.error}>{error}</p>}
               {success && <p className={styles.success}>{success}</p>}
 
@@ -229,6 +239,10 @@ export default function Home() {
               >
                 {uploading ? "Posting..." : "I'm In! Share Commitment"}
               </button>
+
+              <Link href="/donate" className={styles.secondaryButton}>
+                💙 Donate to Men&apos;s Health
+              </Link>
 
               <p className={styles.helperText}>
                 Share your commitment and receive an Early Bird NFT
@@ -316,6 +330,10 @@ export default function Home() {
             >
               {uploading ? uploadStatus || "Processing..." : "Share to Feed"}
             </button>
+
+            <Link href="/donate" className={styles.secondaryButton}>
+              💙 Donate to Men&apos;s Health
+            </Link>
 
             <p className={styles.helperText}>
               Your photo will be transformed into hand-drawn art with AI

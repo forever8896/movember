@@ -1,0 +1,264 @@
+/* Container & Layout */
+.container {
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Header Section */
+.header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 2rem;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all var(--transition-base);
+  margin-bottom: 2rem;
+}
+
+.backButton:hover {
+  background: var(--background);
+  border-color: var(--base-blue);
+  color: var(--base-blue);
+  transform: translateX(-2px);
+}
+
+.logo {
+  width: 60px;
+  height: auto;
+  margin: 0 auto 1.5rem;
+  display: block;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+  animation: fadeIn 0.8s ease-out 0.2s both;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  animation: fadeIn 0.8s ease-out 0.4s both;
+}
+
+/* Info Boxes */
+.infoBox {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  animation: fadeIn 1s ease-out 0.6s both;
+}
+
+.infoItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: all var(--transition-base);
+}
+
+.infoItem:hover {
+  background: var(--surface-elevated);
+  border-color: var(--base-blue);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.infoItem strong {
+  display: block;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+}
+
+.infoItem p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Donation Section */
+.donationSection {
+  width: 100%;
+  max-width: 900px;
+  animation: slideUp 0.8s ease-out 0.5s both;
+}
+
+.networkNotice {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: rgba(60, 138, 255, 0.1);
+  border: 2px solid rgba(60, 138, 255, 0.3);
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.noticeIcon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.networkNotice strong {
+  display: block;
+  color: var(--base-cerulean);
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+}
+
+.networkNotice p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Embed Container */
+.embedContainer {
+  position: relative;
+  width: 100%;
+  min-height: 600px;
+  background: var(--surface-elevated);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.loadingPlaceholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.donationIframe {
+  width: 100%;
+  min-height: 600px;
+  border: none;
+  display: block;
+  background: white;
+}
+
+/* Footer */
+.footer {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.footerText {
+  color: var(--text-tertiary);
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+}
+
+.footerText a {
+  color: var(--base-blue);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color var(--transition-fast);
+}
+
+.footerText a:hover {
+  color: var(--base-cerulean);
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .content {
+    padding: 1.5rem 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .infoBox {
+    grid-template-columns: 1fr;
+  }
+
+  .donationIframe {
+    min-height: 700px;
+  }
+}
+
+@media (max-width: 480px) {
+  .backButton {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .networkNotice {
+    padding: 1rem;
+  }
+
+  .networkNotice strong,
+  .networkNotice p {
+    font-size: 0.85rem;
+  }
+}
