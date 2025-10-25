@@ -1,13 +1,24 @@
+import type { MiniAppManifest } from '@coinbase/onchainkit/minikit';
+
 const ROOT_URL =
   process.env.NEXT_PUBLIC_URL ||
   (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : 'http://localhost:3000');
+
+/**
+ * Extended MiniApp manifest type that includes Base Builder configuration
+ */
+export type ExtendedMiniAppManifest = MiniAppManifest & {
+  baseBuilder?: {
+    ownerAddress: string;
+  };
+};
 
 /**
  * MiniApp configuration object. Must follow the Farcaster MiniApp specification.
  *
  * @see {@link https://miniapps.farcaster.xyz/docs/guides/publishing}
  */
-export const minikitConfig = {
+export const minikitConfig: ExtendedMiniAppManifest = {
   accountAssociation: {
     header: "eyJmaWQiOjE0MDMzMDksInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHg1NmQwYTE1QkI3N0RmOTFiMzI1MTU2MDM0NzE4Zjk3QzljZmExMDUyIn0",
     payload: "eyJkb21haW4iOiJtb3ZlbWJlci1saW1lLnZlcmNlbC5hcHAifQ",
@@ -32,5 +43,8 @@ export const minikitConfig = {
     ogDescription: "Join the movement: snap your mustache daily, earn NFTs, and support men's health with Base Movember",
     ogImageUrl: `${ROOT_URL}/blue-hero.png`,
   },
-} as const;
+  baseBuilder: {
+    ownerAddress: "0xa3B28D256550c0a512F77a5f8CD4527CC3538408"
+  }
+};
 
