@@ -22,6 +22,23 @@ export interface NFTMetadata {
 }
 
 /**
+ * Build IPFS gateway URL with optional gateway key
+ */
+function buildGatewayUrl(cid: string): string {
+  const gateway = process.env.PINATA_GATEWAY || "gateway.pinata.cloud";
+  const gatewayKey = process.env.PINATA_GATEWAY_KEY;
+
+  const baseUrl = `https://${gateway}/ipfs/${cid}`;
+
+  // Add gateway key as query parameter if configured
+  if (gatewayKey) {
+    return `${baseUrl}?pinataGatewayToken=${gatewayKey}`;
+  }
+
+  return baseUrl;
+}
+
+/**
  * Upload an image to IPFS via Pinata
  */
 export async function uploadImageToIPFS(
@@ -33,8 +50,8 @@ export async function uploadImageToIPFS(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const upload = await (pinata.upload as any).file(file);
 
-    // Return the IPFS gateway URL
-    return `https://${process.env.PINATA_GATEWAY || "gateway.pinata.cloud"}/ipfs/${upload.cid}`;
+    // Return the IPFS gateway URL with auth
+    return buildGatewayUrl(upload.cid);
   } catch (error) {
     console.error("Pinata image upload error:", error);
     throw new Error("Failed to upload image to IPFS");
@@ -51,8 +68,8 @@ export async function uploadMetadataToIPFS(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const upload = await (pinata.upload as any).json(metadata);
 
-    // Return the IPFS gateway URL
-    return `https://${process.env.PINATA_GATEWAY || "gateway.pinata.cloud"}/ipfs/${upload.cid}`;
+    // Return the IPFS gateway URL with auth
+    return buildGatewayUrl(upload.cid);
   } catch (error) {
     console.error("Pinata metadata upload error:", error);
     throw new Error("Failed to upload metadata to IPFS");
