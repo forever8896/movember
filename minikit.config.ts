@@ -17,7 +17,7 @@ export const minikitConfig = {
     version: "1",
     name: "Base Movember",
     subtitle: "Grow a Mo, Save a Bro",
-    description: "Join Base Movember - snap your mustache daily, share with friends, earn NFTs, and donate to men's health. Complete all 30 days to earn the exclusive Movember 2025 NFT.",
+    description: "Snap your mustache daily, share with friends, and earn NFTs for mens health. Complete all 30 days to earn the exclusive Movember 2025 NFT.",
     screenshotUrls: [`${ROOT_URL}/screenshot-portrait.png`],
     iconUrl: `${ROOT_URL}/blue-icon.png`,
     splashImageUrl: `${ROOT_URL}/blue-hero.png`,
