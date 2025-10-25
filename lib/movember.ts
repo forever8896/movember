@@ -99,3 +99,44 @@ export function getShareText(day: number): string {
 export function getCompletionMessage(): string {
   return "30 days complete! Thank you for supporting mens health all month long. Claim your exclusive Movember 2025 NFT!";
 }
+
+/**
+ * Check if we're in early bird period (before November)
+ */
+export function isEarlyBird(): boolean {
+  const now = new Date();
+  const month = now.getMonth(); // 0-indexed, November = 10
+  return month < 10; // Before November
+}
+
+/**
+ * Get early bird share text
+ */
+export function getEarlyBirdShareText(taggedUser?: string): string {
+  const baseText = "I will be participating in Based Movember, what about you?";
+
+  if (taggedUser) {
+    return `${baseText}\n\n@${taggedUser} - are you in?`;
+  }
+
+  return baseText;
+}
+
+/**
+ * Get days until Movember starts
+ */
+export function getDaysUntilMovember(): number {
+  const now = new Date();
+  const year = now.getFullYear();
+  const november1st = new Date(year, 10, 1); // November 1st
+
+  // If we're past November, calculate for next year
+  if (now > november1st) {
+    november1st.setFullYear(year + 1);
+  }
+
+  const diffTime = november1st.getTime() - now.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  return diffDays;
+}

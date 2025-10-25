@@ -154,3 +154,44 @@ export function createCompletionNFTMetadata(
     ],
   };
 }
+
+/**
+ * Create Early Bird NFT metadata for pre-November commitment
+ */
+export function createEarlyBirdNFTMetadata(
+  imageUrl: string,
+  fid: string
+): NFTMetadata {
+  return {
+    name: "Base Movember - Early Bird 2025",
+    description: "Early commitment to Base Movember 2025! This NFT represents dedication to mens health before the campaign even started. Early birds set the tone for the entire movement.",
+    image: imageUrl,
+    external_url: "https://movember.com",
+    attributes: [
+      {
+        trait_type: "Badge",
+        value: "Early Bird",
+      },
+      {
+        trait_type: "Year",
+        value: 2025,
+      },
+      {
+        trait_type: "Campaign",
+        value: "Base Movember",
+      },
+      {
+        trait_type: "Participant FID",
+        value: fid,
+      },
+      {
+        trait_type: "Rarity",
+        value: "Rare",
+      },
+      {
+        trait_type: "Commitment Date",
+        value: new Date().toISOString().split('T')[0],
+      },
+    ],
+  };
+}
