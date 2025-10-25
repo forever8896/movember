@@ -20,6 +20,7 @@ export default function Home() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -78,9 +79,10 @@ export default function Home() {
 
     setUploading(true);
     setError("");
+    setUploadStatus("Transforming your photo with AI...");
 
     try {
-      // Upload image to get a public URL
+      // Upload image and transform with Gemini
       const formData = new FormData();
       formData.append("file", imageFile);
       formData.append("day", movemberStatus.currentDay.toString());
@@ -92,24 +94,32 @@ export default function Home() {
       });
 
       if (!uploadResponse.ok) {
-        throw new Error("Failed to upload image");
+        const errorData = await uploadResponse.json();
+        throw new Error(errorData.error || "Failed to upload image");
       }
 
-      const { url } = await uploadResponse.json();
+      setUploadStatus("Uploading to IPFS...");
 
-      // Compose cast with image and donation link
+      const {
+        url,
+        originalUrl,
+        transformedUrl,
+        metadataUrl,
+      } = await uploadResponse.json();
+
+      // Compose cast with AI-transformed image and donation link
       const shareText = getShareText(movemberStatus.currentDay);
       const donationLink = getMovemberDonationLink();
 
       const result = await sdk.actions.composeCast({
-        text: `${shareText}\n\nSupport mens health: ${donationLink}`,
+        text: `${shareText}\n\nAI art powered by Gemini | Support mens health: ${donationLink}`,
         embeds: [url],
       });
 
       if (result?.cast) {
-        setSuccess(`Day ${movemberStatus.currentDay} posted! Cast hash: ${result.cast.hash}`);
+        setSuccess(`Day ${movemberStatus.currentDay} posted! Your AI art is on-chain.`);
 
-        // Track the post
+        // Track the post with all metadata
         await fetch("/api/progress", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -117,7 +127,9 @@ export default function Home() {
             fid: authData?.user?.fid,
             day: movemberStatus.currentDay,
             castHash: result.cast.hash,
-            imageUrl: url,
+            originalUrl,
+            transformedUrl,
+            metadataUrl,
           }),
         });
 
@@ -133,6 +145,7 @@ export default function Home() {
       console.error("Share error:", err);
     } finally {
       setUploading(false);
+      setUploadStatus("");
     }
   };
 
@@ -213,6 +226,7 @@ export default function Home() {
 
             {error && <p className={styles.error}>{error}</p>}
             {success && <p className={styles.success}>{success}</p>}
+            {uploadStatus && <p className={styles.status}>{uploadStatus}</p>}
 
             <button
               type="button"
@@ -220,11 +234,11 @@ export default function Home() {
               disabled={!imageFile || uploading || isAuthLoading}
               className={styles.joinButton}
             >
-              {uploading ? "Sharing..." : "Share to Feed"}
+              {uploading ? uploadStatus || "Processing..." : "Share to Feed"}
             </button>
 
             <p className={styles.helperText}>
-              Post daily to earn NFTs and support mens health research
+              Your photo will be transformed into hand-drawn art with AI
             </p>
           </div>
         </div>

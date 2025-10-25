@@ -12,17 +12,34 @@ import { NextRequest, NextResponse } from "next/server";
  * - User FID
  * - Days completed (1-30)
  * - Cast hashes for each day
- * - Image URLs
+ * - Image URLs (original and AI-transformed)
+ * - NFT metadata URLs
  * - NFT claim status
  */
 
+interface DayProgress {
+  day: number;
+  castHash?: string;
+  originalUrl?: string;
+  transformedUrl?: string;
+  metadataUrl?: string;
+  timestamp: number;
+}
+
 // In-memory storage for demo (use a real database in production)
-const userProgress = new Map<string, Set<number>>();
+const userProgress = new Map<string, Map<number, DayProgress>>();
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { fid, day, castHash, imageUrl: _imageUrl } = body;
+    const {
+      fid,
+      day,
+      castHash,
+      originalUrl,
+      transformedUrl,
+      metadataUrl,
+    } = body;
 
     if (!fid || !day) {
       return NextResponse.json(
@@ -33,16 +50,25 @@ export async function POST(request: NextRequest) {
 
     // Get or create user progress
     if (!userProgress.has(fid.toString())) {
-      userProgress.set(fid.toString(), new Set());
+      userProgress.set(fid.toString(), new Map());
     }
 
     const progress = userProgress.get(fid.toString())!;
-    progress.add(day);
 
-    console.log(`Progress updated - FID: ${fid}, Day: ${day}, Cast: ${castHash}`);
+    // Store the day's progress with all metadata
+    progress.set(day, {
+      day,
+      castHash,
+      originalUrl,
+      transformedUrl,
+      metadataUrl,
+      timestamp: Date.now(),
+    });
 
-    // TODO: Store in database with cast hash and image URL
-    // TODO: Trigger NFT mint if eligible
+    console.log(`Progress updated - FID: ${fid}, Day: ${day}, Metadata: ${metadataUrl}`);
+
+    // TODO: Store in database
+    // TODO: Trigger NFT mint using metadataUrl
 
     const daysCompleted = progress.size;
     const isComplete = daysCompleted === 30;
@@ -51,8 +77,9 @@ export async function POST(request: NextRequest) {
       success: true,
       daysCompleted,
       isComplete,
+      metadataUrl,
       message: isComplete
-        ? "Congratulations! You completed all 30 days!"
+        ? "Congratulations! You completed all 30 days! Claim your exclusive completion NFT!"
         : `Day ${day} recorded! ${30 - daysCompleted} days remaining.`,
     });
 
@@ -77,14 +104,14 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const progress = userProgress.get(fid) || new Set();
-    const daysCompleted = Array.from(progress).sort((a, b) => a - b);
+    const progress = userProgress.get(fid) || new Map();
+    const daysData = Array.from(progress.values()).sort((a, b) => a.day - b.day);
 
     return NextResponse.json({
       fid,
-      daysCompleted,
-      totalDays: daysCompleted.length,
-      isComplete: daysCompleted.length === 30,
+      days: daysData,
+      totalDays: daysData.length,
+      isComplete: daysData.length === 30,
     });
 
   } catch (error) {

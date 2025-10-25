@@ -225,3 +225,23 @@
   color: #717886;
   margin-top: 1rem;
 }
+
+.status {
+  color: #3c8aff;
+  font-size: 0.9rem;
+  margin: 0;
+  padding: 0.5rem;
+  background: #32353d;
+  border-radius: 8px;
+  border: 1px solid #3c8aff;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}

@@ -1,14 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
+import { transformToHandDrawn } from "../../../lib/gemini";
+import {
+  uploadImageToIPFS,
+  uploadMetadataToIPFS,
+  createNFTMetadata,
+} from "../../../lib/pinata";
 
 /**
  * Upload endpoint for mustache photos
- *
- * For production, this should upload to:
- * - Vercel Blob Storage
- * - IPFS (Pinata/NFT.Storage)
- * - AWS S3/Cloudinary
- *
- * For now, we'll simulate an upload and return a placeholder URL
+ * Flow:
+ * 1. Receive user photo
+ * 2. Transform with Gemini AI to hand-drawn style
+ * 3. Upload both images to IPFS
+ * 4. Create and upload NFT metadata
+ * 5. Return metadata URI and image URLs
  */
 export async function POST(request: NextRequest) {
   try {
@@ -40,27 +45,56 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // TODO: Implement actual file upload to storage service
-    // For now, we'll return a placeholder URL
-    // In production, you would:
-    // 1. Upload to Vercel Blob: https://vercel.com/docs/storage/vercel-blob
-    // 2. Or upload to IPFS for decentralized storage
-    // 3. Return the public URL
+    console.log(`Processing upload - Day: ${day}, FID: ${fid}`);
 
-    console.log(`Upload request - Day: ${day}, FID: ${fid}, File: ${file.name}`);
+    // Convert file to base64 for Gemini
+    const arrayBuffer = await file.arrayBuffer();
+    const base64Image = Buffer.from(arrayBuffer).toString("base64");
 
-    // Placeholder URL - replace with actual upload logic
-    const placeholderUrl = `${process.env.NEXT_PUBLIC_URL || "http://localhost:3000"}/uploads/mo-day-${day}-${fid}.jpg`;
+    console.log("Transforming image with Gemini AI...");
+
+    // Transform the image with Gemini AI
+    const transformedBase64 = await transformToHandDrawn(base64Image);
+    const transformedBuffer = Buffer.from(transformedBase64, "base64");
+
+    console.log("Uploading images to IPFS...");
+
+    // Upload both images to IPFS
+    const [originalUrl, transformedUrl] = await Promise.all([
+      uploadImageToIPFS(
+        Buffer.from(arrayBuffer),
+        `movember-day-${day}-${fid}-original.png`
+      ),
+      uploadImageToIPFS(
+        transformedBuffer,
+        `movember-day-${day}-${fid}-art.png`
+      ),
+    ]);
+
+    console.log("Creating NFT metadata...");
+
+    // Create NFT metadata using the transformed image
+    const metadata = createNFTMetadata(parseInt(day), transformedUrl, fid);
+
+    console.log("Uploading metadata to IPFS...");
+
+    // Upload metadata to IPFS
+    const metadataUrl = await uploadMetadataToIPFS(metadata);
+
+    console.log("Upload complete!");
 
     return NextResponse.json({
-      url: placeholderUrl,
       success: true,
+      originalUrl,
+      transformedUrl,
+      metadataUrl,
+      url: transformedUrl, // Return transformed URL for display
     });
 
   } catch (error) {
     console.error("Upload error:", error);
     return NextResponse.json(
-      { error: "Upload failed" },
+      { error: error instanceof Error ? error.message : "Upload failed" },
       { status: 500 }
     );
   }
