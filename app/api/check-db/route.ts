@@ -21,7 +21,7 @@ export async function GET() {
     const donationsTableExists = tableCheck.rows[0]?.exists || false;
 
     // If table exists, get its columns
-    let columns = [];
+    let columns: any[] = [];
     if (donationsTableExists) {
       const columnQuery = await sql`
         SELECT column_name, data_type, is_nullable
