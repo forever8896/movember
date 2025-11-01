@@ -80,7 +80,11 @@ export default function Home() {
     setError("");
 
     try {
-      const shareText = getEarlyBirdShareText();
+      if (!authData?.user?.fid) {
+        throw new Error("Authentication required. Please reload the app.");
+      }
+
+      const shareText = getEarlyBirdShareText(taggedFriend);
       const appUrl = process.env.NEXT_PUBLIC_URL || "https://movember-lime.vercel.app";
 
       const result = await sdk.actions.composeCast({
@@ -91,13 +95,16 @@ export default function Home() {
       if (result?.cast) {
         setSuccess("Commitment posted! You're an early bird 🐦");
 
-        // Create early bird NFT
+        // Save early bird commitment
         await fetch("/api/early-bird", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            fid: authData?.user?.fid,
+            fid: authData.user.fid,
             castHash: result.cast.hash,
+            taggedFriend,
+            displayName: context?.user?.displayName,
+            username: context?.user?.username,
           }),
         });
       }
@@ -122,13 +129,24 @@ export default function Home() {
 
     setUploading(true);
     setError("");
-    setUploadStatus("Transforming your photo with AI...");
+    setUploadStatus("Uploading your photo...");
 
     try {
+      // Validate we have required data
+      if (!movemberStatus.currentDay) {
+        throw new Error("Movember is not currently active");
+      }
+
+      if (!authData?.user?.fid) {
+        throw new Error("Authentication required. Please reload the app.");
+      }
+
       const formData = new FormData();
       formData.append("file", imageFile);
       formData.append("day", movemberStatus.currentDay.toString());
-      formData.append("fid", authData?.user?.fid.toString() || "");
+      formData.append("fid", authData.user.fid.toString());
+      formData.append("displayName", context?.user?.displayName || "");
+      formData.append("username", context?.user?.username || "");
 
       const uploadResponse = await fetch("/api/upload", {
         method: "POST",
@@ -140,25 +158,20 @@ export default function Home() {
         throw new Error(errorData.error || "Failed to upload image");
       }
 
-      setUploadStatus("Uploading to IPFS...");
+      const { imageUrl } = await uploadResponse.json();
 
-      const {
-        url,
-        originalUrl,
-        transformedUrl,
-        metadataUrl,
-      } = await uploadResponse.json();
+      setUploadStatus("Sharing to Farcaster...");
 
       const shareText = getShareText(movemberStatus.currentDay);
       const donationLink = getMovemberDonationLink();
 
       const result = await sdk.actions.composeCast({
-        text: `${shareText}\n\nAI art powered by Gemini | Support mens health: ${donationLink}`,
-        embeds: [url],
+        text: `${shareText}\n\nSupport men's health: ${donationLink}`,
+        embeds: [imageUrl],
       });
 
       if (result?.cast) {
-        setSuccess(`Day ${movemberStatus.currentDay} posted! Your AI art is on-chain.`);
+        setSuccess(`Day ${movemberStatus.currentDay} posted! View your gallery to see progress.`);
 
         await fetch("/api/progress", {
           method: "POST",
@@ -167,9 +180,7 @@ export default function Home() {
             fid: authData?.user?.fid,
             day: movemberStatus.currentDay,
             castHash: result.cast.hash,
-            originalUrl,
-            transformedUrl,
-            metadataUrl,
+            imageUrl,
           }),
         });
 
@@ -240,12 +251,17 @@ export default function Home() {
                 {uploading ? "Posting..." : "I'm In! Share Commitment"}
               </button>
 
-              <Link href="/donate" className={styles.secondaryButton}>
-                💙 Donate to Men&apos;s Health
-              </Link>
+              <div className={styles.buttonGroup}>
+                <Link href="/gallery" className={styles.secondaryButton}>
+                  📸 View Gallery
+                </Link>
+                <Link href="/donate" className={styles.secondaryButton}>
+                  💙 Donate
+                </Link>
+              </div>
 
               <p className={styles.helperText}>
-                Share your commitment and receive an Early Bird NFT
+                Share your commitment and be recognized as an Early Bird
               </p>
             </div>
           </div>
@@ -331,12 +347,17 @@ export default function Home() {
               {uploading ? uploadStatus || "Processing..." : "Share to Feed"}
             </button>
 
-            <Link href="/donate" className={styles.secondaryButton}>
-              💙 Donate to Men&apos;s Health
-            </Link>
+            <div className={styles.buttonGroup}>
+              <Link href="/gallery" className={styles.secondaryButton}>
+                📸 View Gallery
+              </Link>
+              <Link href="/donate" className={styles.secondaryButton}>
+                💙 Donate
+              </Link>
+            </div>
 
             <p className={styles.helperText}>
-              Your photo will be transformed into hand-drawn art with AI
+              Your photo will be shared to Farcaster and saved to your gallery
             </p>
           </div>
         </div>
