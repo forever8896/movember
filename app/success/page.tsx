@@ -70,7 +70,7 @@ function SuccessContent() {
           </p>
 
           <button onClick={handleShare} className={styles.shareButton}>
-            SHARE TO FARCASTER
+            SHARE
           </button>
 
           <div style={{ marginTop: '1.5rem', display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>

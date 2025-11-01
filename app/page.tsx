@@ -159,7 +159,7 @@ export default function Home() {
 
       const { imageUrl } = await uploadResponse.json();
 
-      setUploadStatus("Sharing to Farcaster...");
+      setUploadStatus("Sharing...");
 
       const shareText = getShareText(movemberStatus.currentDay);
       const appUrl = process.env.NEXT_PUBLIC_URL || "https://movember-lime.vercel.app";
@@ -363,7 +363,7 @@ export default function Home() {
             </div>
 
             <p className={styles.helperText}>
-              Your photo will be shared to Farcaster and saved to your gallery
+              Your photo will be shared and saved to your gallery
             </p>
           </div>
         </div>
