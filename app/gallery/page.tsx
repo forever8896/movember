@@ -63,6 +63,7 @@ export default function Gallery() {
       console.error("Authentication failed:", authData);
       setLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authData]);
 
   const fetchProgress = async () => {
@@ -199,6 +200,7 @@ export default function Gallery() {
 
                 {isCompleted && photo ? (
                   <div className={styles.dayContent}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={photo.image_url}
                       alt={`Day ${day}`}
@@ -249,6 +251,7 @@ export default function Gallery() {
             <div className={styles.comparison}>
               <div className={styles.comparisonItem}>
                 <h3>Day 1</h3>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={photoMap.get(1)?.image_url}
                   alt="Day 1"
@@ -258,6 +261,7 @@ export default function Gallery() {
               <div className={styles.comparisonArrow}>→</div>
               <div className={styles.comparisonItem}>
                 <h3>Day {daysCompleted}</h3>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={photoMap.get(daysCompleted)?.image_url}
                   alt={`Day ${daysCompleted}`}

@@ -7,6 +7,12 @@
 import { NextResponse } from "next/server";
 import { sql } from "@vercel/postgres";
 
+interface ColumnInfo {
+  column_name: string;
+  data_type: string;
+  is_nullable: string;
+}
+
 export async function GET() {
   try {
     // Check if donations table exists
@@ -21,7 +27,7 @@ export async function GET() {
     const donationsTableExists = tableCheck.rows[0]?.exists || false;
 
     // If table exists, get its columns
-    let columns: any[] = [];
+    let columns: ColumnInfo[] = [];
     if (donationsTableExists) {
       const columnQuery = await sql`
         SELECT column_name, data_type, is_nullable
