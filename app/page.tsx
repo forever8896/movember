@@ -7,7 +7,6 @@ import Link from "next/link";
 import {
   getMovemberStatus,
   getShareText,
-  getMovemberDonationLink,
   isEarlyBird,
   getDaysUntilMovember,
   getEarlyBirdShareText,
@@ -163,11 +162,12 @@ export default function Home() {
       setUploadStatus("Sharing to Farcaster...");
 
       const shareText = getShareText(movemberStatus.currentDay);
-      const donationLink = getMovemberDonationLink();
+      const appUrl = process.env.NEXT_PUBLIC_URL || "https://movember-lime.vercel.app";
+      const sharePageUrl = `${appUrl}/share/${authData.user.fid}/${movemberStatus.currentDay}`;
 
       const result = await sdk.actions.composeCast({
-        text: `${shareText}\n\nSupport men's health: ${donationLink}`,
-        embeds: [imageUrl],
+        text: shareText,
+        embeds: [sharePageUrl],
       });
 
       if (result?.cast) {
@@ -253,10 +253,13 @@ export default function Home() {
 
               <div className={styles.buttonGroup}>
                 <Link href="/gallery" className={styles.secondaryButton}>
-                  📸 View Gallery
+                  📸 Gallery
                 </Link>
                 <Link href="/donate" className={styles.secondaryButton}>
                   💙 Donate
+                </Link>
+                <Link href="/leaderboard" className={styles.secondaryButton}>
+                  🏆 Leaderboard
                 </Link>
               </div>
 
@@ -349,10 +352,13 @@ export default function Home() {
 
             <div className={styles.buttonGroup}>
               <Link href="/gallery" className={styles.secondaryButton}>
-                📸 View Gallery
+                📸 Gallery
               </Link>
               <Link href="/donate" className={styles.secondaryButton}>
                 💙 Donate
+              </Link>
+              <Link href="/leaderboard" className={styles.secondaryButton}>
+                🏆 Leaderboard
               </Link>
             </div>
 

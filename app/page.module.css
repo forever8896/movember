@@ -396,6 +396,24 @@
   transform: translateY(-2px);
 }
 
+/* Button Group */
+.buttonGroup {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  width: 100%;
+}
+
+.buttonGroup .secondaryButton {
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .buttonGroup {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Status Messages */
 .error {
   color: var(--base-red);
