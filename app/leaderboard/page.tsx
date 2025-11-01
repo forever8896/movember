@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useMiniKit } from "@coinbase/onchainkit/minikit";
 import Link from "next/link";
 import Image from "next/image";
+import Loading from "@/components/Loading";
 import styles from "./leaderboard.module.css";
 
 interface Donor {
@@ -59,12 +60,7 @@ export default function LeaderboardPage() {
     return (
       <div className={styles.container}>
         <div className={styles.content}>
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p className="text-gray-500">Loading leaderboard...</p>
-            </div>
-          </div>
+          <Loading message="Loading leaderboard..." />
         </div>
       </div>
     );

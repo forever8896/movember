@@ -1,10 +1,11 @@
 .container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100dvh;
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
   color: white;
   position: relative;
+  overflow: hidden;
 }
 
 .closeButton {
@@ -36,7 +37,9 @@
   align-items: center;
   justify-content: center;
   flex: 1;
-  padding: 2rem;
+  padding: 1.5rem;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .successMessage {

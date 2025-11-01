@@ -204,80 +204,6 @@ export default function Home() {
     return (
       <div className={styles.container}>
         <div className={styles.content}>
-          <div className={styles.card}>
-            <Image
-              src="/logo.png"
-              alt="Based Movember"
-              width={80}
-              height={80}
-              className={styles.logo}
-            />
-
-            <h1 className={styles.title}>Based Movember</h1>
-
-            <div className={styles.badge}>Early Bird</div>
-
-            <p className={styles.subtitle}>
-              Hey {context?.user?.displayName || "there"}!
-            </p>
-
-            <div className={styles.countdown}>
-              <div className={styles.countdownNumber}>{daysUntil}</div>
-              <div className={styles.countdownLabel}>Days Until Movember</div>
-            </div>
-
-            <p className={styles.subtitle}>
-              Commit early and earn your exclusive Early Bird NFT
-            </p>
-
-            <div className={styles.form}>
-              <input
-                type="text"
-                placeholder="Tag a friend (optional)"
-                value={taggedFriend}
-                onChange={(e) => setTaggedFriend(e.target.value)}
-                className={styles.input}
-              />
-
-              {error && <p className={styles.error}>{error}</p>}
-              {success && <p className={styles.success}>{success}</p>}
-
-              <button
-                type="button"
-                onClick={handleEarlyBirdCommitment}
-                disabled={uploading || isAuthLoading}
-                className={styles.button}
-              >
-                {uploading ? "Posting..." : "I'm In! Share Commitment"}
-              </button>
-
-              <div className={styles.buttonGroup}>
-                <Link href="/gallery" className={styles.secondaryButton}>
-                  📸 Gallery
-                </Link>
-                <Link href="/donate" className={styles.secondaryButton}>
-                  💙 Donate
-                </Link>
-                <Link href="/leaderboard" className={styles.secondaryButton}>
-                  🏆 Leaderboard
-                </Link>
-              </div>
-
-              <p className={styles.helperText}>
-                Share your commitment and be recognized as an Early Bird
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // November Mode
-  return (
-    <div className={styles.container}>
-      <div className={styles.content}>
-        <div className={styles.card}>
           <Image
             src="/logo.png"
             alt="Based Movember"
@@ -288,66 +214,40 @@ export default function Home() {
 
           <h1 className={styles.title}>Based Movember</h1>
 
+          <div className={styles.badge}>Early Bird</div>
+
           <p className={styles.subtitle}>
             Hey {context?.user?.displayName || "there"}!
           </p>
 
-          <p className={styles.dayCounter}>
-            Day {movemberStatus.currentDay} of 30
-          </p>
+          <div className={styles.countdown}>
+            <div className={styles.countdownNumber}>{daysUntil}</div>
+            <div className={styles.countdownLabel}>Days Until Movember</div>
+          </div>
 
           <p className={styles.subtitle}>
-            Snap your mustache and share to support mens health
+            Commit early and earn your exclusive Early Bird NFT
           </p>
 
           <div className={styles.form}>
-            {selectedImage ? (
-              <div className={styles.imagePreview}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={selectedImage} alt="Selected mustache" />
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedImage(null);
-                    setImageFile(null);
-                    if (fileInputRef.current) {
-                      fileInputRef.current.value = "";
-                    }
-                  }}
-                  className={styles.removeButton}
-                >
-                  Remove
-                </button>
-              </div>
-            ) : (
-              <div className={styles.uploadArea}>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  capture="user"
-                  onChange={handleImageSelect}
-                  className={styles.fileInput}
-                  id="photo-input"
-                />
-                <label htmlFor="photo-input" className={styles.uploadLabel}>
-                  <span>📸</span>
-                  <span>Snap or Upload Photo</span>
-                </label>
-              </div>
-            )}
+            <input
+              type="text"
+              placeholder="Tag a friend (optional)"
+              value={taggedFriend}
+              onChange={(e) => setTaggedFriend(e.target.value)}
+              className={styles.input}
+            />
 
             {error && <p className={styles.error}>{error}</p>}
             {success && <p className={styles.success}>{success}</p>}
-            {uploadStatus && <p className={styles.status}>{uploadStatus}</p>}
 
             <button
               type="button"
-              onClick={handleShare}
-              disabled={!imageFile || uploading || isAuthLoading}
+              onClick={handleEarlyBirdCommitment}
+              disabled={uploading || isAuthLoading}
               className={styles.button}
             >
-              {uploading ? uploadStatus || "Processing..." : "Share to Feed"}
+              {uploading ? "Posting..." : "I'm In! Share Commitment"}
             </button>
 
             <div className={styles.buttonGroup}>
@@ -363,9 +263,105 @@ export default function Home() {
             </div>
 
             <p className={styles.helperText}>
-              Your photo will be shared and saved to your gallery
+              Share your commitment and be recognized as an Early Bird
             </p>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  // November Mode
+  return (
+    <div className={styles.container}>
+      <div className={styles.content}>
+        <Image
+          src="/logo.png"
+          alt="Based Movember"
+          width={80}
+          height={80}
+          className={styles.logo}
+        />
+
+        <h1 className={styles.title}>Based Movember</h1>
+
+        <p className={styles.subtitle}>
+          Hey {context?.user?.displayName || "there"}!
+        </p>
+
+        <p className={styles.dayCounter}>
+          Day {movemberStatus.currentDay} of 30
+        </p>
+
+        <p className={styles.subtitle}>
+          Snap your mustache and share to support mens health
+        </p>
+
+        <div className={styles.form}>
+          {selectedImage ? (
+            <div className={styles.imagePreview}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={selectedImage} alt="Selected mustache" />
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedImage(null);
+                  setImageFile(null);
+                  if (fileInputRef.current) {
+                    fileInputRef.current.value = "";
+                  }
+                }}
+                className={styles.removeButton}
+              >
+                Remove
+              </button>
+            </div>
+          ) : (
+            <div className={styles.uploadArea}>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                capture="user"
+                onChange={handleImageSelect}
+                className={styles.fileInput}
+                id="photo-input"
+              />
+              <label htmlFor="photo-input" className={styles.uploadLabel}>
+                <span>📸</span>
+                <span>Snap or Upload Photo</span>
+              </label>
+            </div>
+          )}
+
+          {error && <p className={styles.error}>{error}</p>}
+          {success && <p className={styles.success}>{success}</p>}
+          {uploadStatus && <p className={styles.status}>{uploadStatus}</p>}
+
+          <button
+            type="button"
+            onClick={handleShare}
+            disabled={!imageFile || uploading || isAuthLoading}
+            className={styles.button}
+          >
+            {uploading ? uploadStatus || "Processing..." : "Share to Feed"}
+          </button>
+
+          <div className={styles.buttonGroup}>
+            <Link href="/gallery" className={styles.secondaryButton}>
+              📸 Gallery
+            </Link>
+            <Link href="/donate" className={styles.secondaryButton}>
+              💙 Donate
+            </Link>
+            <Link href="/leaderboard" className={styles.secondaryButton}>
+              🏆 Leaderboard
+            </Link>
+          </div>
+
+          <p className={styles.helperText}>
+            Your photo will be shared and saved to your gallery
+          </p>
         </div>
       </div>
     </div>

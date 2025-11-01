@@ -8,6 +8,7 @@ import Link from "next/link";
 import { DonationSwapper } from "@/components/DonationSwapper";
 import { getMovemberOrg } from "@/lib/endaoment-requests";
 import { NdaoApiOrg } from "@/lib/endaoment-constants";
+import Loading from "@/components/Loading";
 import styles from "./donate.module.css";
 
 export default function DonatePage() {
@@ -49,12 +50,7 @@ export default function DonatePage() {
     return (
       <div className={styles.container}>
         <div className={styles.content}>
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p className="text-gray-500">Loading donation page...</p>
-            </div>
-          </div>
+          <Loading message="Loading donation page..." />
         </div>
       </div>
     );

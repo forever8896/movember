@@ -1,45 +1,53 @@
 /* Container & Layout */
 .container {
-  min-height: 100vh;
+  height: 100dvh;
   background: var(--background);
   color: var(--text-primary);
-  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .content {
   max-width: 1400px;
   margin: 0 auto;
+  width: 100%;
   animation: fadeIn 0.6s ease-out;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1rem;
+  flex: 1;
 }
 
 /* Loading & Error States */
 .loading,
 .error {
   text-align: center;
-  padding: 4rem 2rem;
-  font-size: 1.2rem;
+  padding: 2rem 1rem;
+  font-size: 1rem;
   color: var(--text-secondary);
 }
 
 /* Header Section */
 .header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
 }
 
 .backButton {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
+  padding: 0.5rem 0.875rem;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 10px;
   color: var(--text-primary);
   text-decoration: none;
+  font-size: 0.85rem;
   font-weight: 600;
   transition: all var(--transition-base);
-  margin-bottom: 2rem;
+  margin-bottom: 0.75rem;
 }
 
 .backButton:hover {
@@ -50,47 +58,47 @@
 }
 
 .logo {
-  width: 60px;
+  width: 40px;
   height: auto;
-  margin: 0 auto 1rem;
+  margin: 0 auto 0.5rem;
   display: block;
   animation: fadeIn 0.6s ease-out;
 }
 
 .title {
-  font-size: clamp(2rem, 5vw, 2.5rem);
+  font-size: clamp(1.25rem, 4vw, 1.75rem);
   font-weight: 700;
   letter-spacing: -0.02em;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   color: var(--text-primary);
 }
 
 .earlyBirdBadge {
   display: inline-block;
-  padding: 0.5rem 1rem;
+  padding: 0.35rem 0.75rem;
   background: rgba(60, 138, 255, 0.1);
   border: 2px solid var(--base-cerulean);
-  border-radius: 20px;
+  border-radius: 16px;
   color: var(--base-cerulean);
   font-weight: 600;
-  font-size: 0.9rem;
-  margin-bottom: 1.5rem;
+  font-size: 0.8rem;
+  margin-bottom: 0.75rem;
 }
 
 /* Stats Section */
 .statsContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
   max-width: 600px;
-  margin: 2rem auto;
+  margin: 0.75rem auto;
 }
 
 .stat {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1rem;
+  border-radius: 10px;
+  padding: 0.75rem 0.5rem;
   transition: all var(--transition-base);
 }
 
@@ -100,14 +108,14 @@
 }
 
 .statValue {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--base-blue);
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.125rem;
 }
 
 .statLabel {
-  font-size: 0.85rem;
+  font-size: 0.7rem;
   color: var(--text-secondary);
 }
 
@@ -115,10 +123,10 @@
 .progressBar {
   width: 100%;
   max-width: 600px;
-  height: 12px;
+  height: 8px;
   background: var(--surface);
-  border-radius: 6px;
-  margin: 1.5rem auto;
+  border-radius: 4px;
+  margin: 0.75rem auto 0.25rem;
   overflow: hidden;
   border: 1px solid var(--border);
 }
@@ -127,14 +135,15 @@
   height: 100%;
   background: linear-gradient(90deg, var(--base-blue), var(--base-cerulean));
   transition: width 0.5s ease;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 .progressText {
-  font-size: 1rem;
+  font-size: 0.85rem;
   color: var(--text-secondary);
   font-weight: 600;
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.75rem;
 }
 
 .completionBanner {
@@ -153,16 +162,16 @@
 /* Calendar Grid */
 .calendar {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 1rem;
-  margin-bottom: 3rem;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .dayCard {
   background: var(--surface-elevated);
   border: 2px solid var(--border);
-  border-radius: 16px;
-  padding: 1rem;
+  border-radius: 12px;
+  padding: 0.5rem;
   aspect-ratio: 1;
   display: flex;
   flex-direction: column;
@@ -213,10 +222,10 @@
 }
 
 .dayNumber {
-  font-size: 0.9rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: var(--text-secondary);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 /* Day Content */
@@ -236,7 +245,7 @@
 }
 
 .dayDate {
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   color: var(--text-tertiary);
   text-align: center;
 }
@@ -244,12 +253,12 @@
 .viewCast {
   display: block;
   text-align: center;
-  padding: 0.5rem;
+  padding: 0.35rem;
   background: var(--surface);
-  border-radius: 6px;
+  border-radius: 4px;
   color: var(--base-blue);
   text-decoration: none;
-  font-size: 0.8rem;
+  font-size: 0.65rem;
   font-weight: 600;
   transition: all var(--transition-fast);
 }
@@ -270,11 +279,12 @@
 .postNow {
   display: block;
   text-align: center;
-  padding: 1rem;
+  padding: 0.5rem 0.25rem;
   background: var(--base-blue);
   color: white;
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
   font-weight: 600;
   transition: all var(--transition-base);
 }
@@ -291,29 +301,29 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
+  gap: 0.25rem;
+  font-size: 0.7rem;
   color: var(--text-tertiary);
 }
 
 .dayMissed span:first-child,
 .dayLocked span:first-child {
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 
 /* Comparison Section */
 .comparisonSection {
-  margin: 3rem 0;
-  padding: 2rem;
+  margin: 1rem 0;
+  padding: 1rem;
   background: var(--surface);
-  border-radius: 16px;
+  border-radius: 12px;
   border: 1px solid var(--border);
 }
 
 .comparisonSection h2 {
   text-align: center;
-  font-size: 1.8rem;
-  margin-bottom: 2rem;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
   color: var(--text-primary);
 }
 
@@ -321,32 +331,32 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
 }
 
 .comparisonItem {
   flex: 1;
-  min-width: 200px;
-  max-width: 300px;
+  min-width: 120px;
+  max-width: 180px;
 }
 
 .comparisonItem h3 {
   text-align: center;
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
   color: var(--text-secondary);
 }
 
 .comparisonImage {
   width: 100%;
-  border-radius: 12px;
+  border-radius: 8px;
   border: 2px solid var(--border);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .comparisonArrow {
-  font-size: 3rem;
+  font-size: 1.5rem;
   color: var(--base-blue);
   font-weight: bold;
 }
@@ -354,18 +364,19 @@
 /* Footer */
 .footer {
   text-align: center;
-  margin-top: 3rem;
+  margin-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .donateButton {
   display: inline-block;
-  padding: 1rem 2rem;
+  padding: 0.75rem 1.5rem;
   background: var(--base-blue);
   color: white;
   text-decoration: none;
-  border-radius: 12px;
+  border-radius: 10px;
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   transition: all var(--transition-base);
   box-shadow: var(--shadow-md);
 }
@@ -379,12 +390,11 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .calendar {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
   }
 
   .comparisonArrow {
-    font-size: 2rem;
+    font-size: 1.25rem;
     transform: rotate(90deg);
   }
 
@@ -395,10 +405,28 @@
 
 @media (max-width: 480px) {
   .calendar {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 0.35rem;
+  }
+
+  .dayCard {
+    padding: 0.35rem;
+    border-radius: 8px;
   }
 
   .statsContainer {
-    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+
+  .stat {
+    padding: 0.5rem 0.35rem;
+  }
+
+  .statValue {
+    font-size: 1rem;
+  }
+
+  .statLabel {
+    font-size: 0.65rem;
   }
 }

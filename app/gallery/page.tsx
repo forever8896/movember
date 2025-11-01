@@ -5,6 +5,7 @@ import { useQuickAuth, useMiniKit } from "@coinbase/onchainkit/minikit";
 import Image from "next/image";
 import Link from "next/link";
 import { getMovemberStatus } from "../../lib/movember";
+import Loading from "../../components/Loading";
 import styles from "./gallery.module.css";
 
 interface DailyPhoto {
@@ -37,6 +38,18 @@ export default function Gallery() {
     }
   }, [setFrameReady, isFrameReady]);
 
+  // Timeout fallback - if auth takes too long, stop loading
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (loading) {
+        console.warn("Auth timeout - stopping loading state");
+        setLoading(false);
+      }
+    }, 10000); // 10 second timeout
+
+    return () => clearTimeout(timeout);
+  }, [loading]);
+
   const { data: authData } = useQuickAuth<{ user: { fid: number } }>(
     "/api/auth",
     { method: "GET" }
@@ -45,6 +58,10 @@ export default function Gallery() {
   useEffect(() => {
     if (authData?.user?.fid) {
       fetchProgress();
+    } else if (authData && !authData.user) {
+      // Auth completed but failed (error response received)
+      console.error("Authentication failed:", authData);
+      setLoading(false);
     }
   }, [authData]);
 
@@ -63,7 +80,9 @@ export default function Gallery() {
   if (loading) {
     return (
       <div className={styles.container}>
-        <div className={styles.loading}>Loading your gallery...</div>
+        <div className={styles.content}>
+          <Loading message="Loading your gallery..." />
+        </div>
       </div>
     );
   }
@@ -71,7 +90,26 @@ export default function Gallery() {
   if (!progressData) {
     return (
       <div className={styles.container}>
-        <div className={styles.error}>Failed to load gallery</div>
+        <div className={styles.content}>
+          <div className={styles.header}>
+            <Link href="/" className={styles.backButton}>
+              ← Back to Home
+            </Link>
+            <Image
+              src="/logo.png"
+              alt="Based Movember"
+              width={60}
+              height={60}
+              className={styles.logo}
+            />
+            <h1 className={styles.title}>Gallery</h1>
+          </div>
+          <div className={styles.error}>
+            {authData && !authData.user
+              ? "Authentication required. Please open this in the Farcaster app."
+              : "Failed to load gallery. Please try again."}
+          </div>
+        </div>
       </div>
     );
   }

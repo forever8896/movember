@@ -1,6 +1,6 @@
 /* Container & Layout */
 .container {
-  min-height: 100vh;
+  height: 100dvh;
   background: var(--background);
   color: var(--text-primary);
   display: flex;
@@ -39,22 +39,28 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 1.5rem;
   position: relative;
   z-index: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-width: 560px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .card {
   background: var(--surface-elevated);
   border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 3rem 2.5rem;
+  border-radius: 20px;
+  padding: 1.5rem 1.25rem;
   max-width: 560px;
   width: 100%;
   box-shadow: var(--shadow-xl);
   animation: slideUp 0.6s ease-out;
   position: relative;
   overflow: hidden;
+  margin: auto 0;
 }
 
 .card::before {
@@ -70,15 +76,15 @@
 
 /* Typography */
 .logo {
-  width: 80px;
+  width: 60px;
   height: auto;
-  margin: 0 auto 1.5rem;
+  margin: 0 auto 0.75rem;
   display: block;
   animation: fadeIn 0.6s ease-out both;
 }
 
 .title {
-  font-size: clamp(2.5rem, 6vw, 3.5rem);
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
   font-weight: 700;
   letter-spacing: -0.02em;
   margin-bottom: 0.5rem;
@@ -88,9 +94,9 @@
 }
 
 .subtitle {
-  font-size: 1.25rem;
-  line-height: 1.6;
-  margin-bottom: 2rem;
+  font-size: 1rem;
+  line-height: 1.4;
+  margin-bottom: 0.75rem;
   color: var(--text-secondary);
   font-weight: 400;
   text-align: center;
@@ -98,10 +104,10 @@
 }
 
 .dayCounter {
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 700;
   color: var(--base-blue);
-  margin: 1.5rem 0;
+  margin: 0.75rem 0;
   text-align: center;
   animation: scaleIn 0.5s ease-out 0.3s both;
   position: relative;
@@ -121,8 +127,8 @@
 
 /* Countdown Component */
 .countdown {
-  margin-top: 2rem;
-  padding: 2.5rem;
+  margin-top: 1rem;
+  padding: 1.5rem;
   background: var(--surface);
   border-radius: 16px;
   border: 2px solid var(--border);
@@ -141,16 +147,16 @@
 }
 
 .countdownNumber {
-  font-size: 4rem;
+  font-size: 2.5rem;
   font-weight: 700;
   color: var(--base-blue);
-  margin: 1rem 0;
+  margin: 0.5rem 0;
   font-variant-numeric: tabular-nums;
   animation: pulse 2s ease-in-out infinite;
 }
 
 .countdownLabel {
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -161,15 +167,15 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 0.75rem;
   width: 100%;
   animation: fadeIn 0.8s ease-out 0.5s both;
 }
 
 .input {
   width: 100%;
-  padding: 1rem 1.5rem;
-  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
   background: var(--background);
   border: 2px solid var(--border);
   border-radius: 12px;
@@ -209,8 +215,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1.25rem;
-  padding: 3rem 2rem;
+  gap: 0.75rem;
+  padding: 2rem 1.5rem;
   background: var(--surface);
   border: 2px dashed var(--border-strong);
   border-radius: 16px;
@@ -241,7 +247,7 @@
 }
 
 .uploadLabel span:first-child {
-  font-size: 3rem;
+  font-size: 2.5rem;
   filter: grayscale(0.3);
   transition: filter var(--transition-base);
 }
@@ -252,7 +258,7 @@
 }
 
 .uploadLabel span:last-child {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   color: var(--text-secondary);
   font-weight: 500;
   transition: color var(--transition-base);
@@ -266,7 +272,7 @@
 .imagePreview {
   position: relative;
   width: 100%;
-  margin: 1rem 0;
+  margin: 0.5rem 0;
   border-radius: 16px;
   overflow: hidden;
   animation: scaleIn 0.4s ease-out;
@@ -315,8 +321,8 @@
   background: var(--base-blue);
   color: white;
   border: none;
-  padding: 1.25rem 3rem;
-  font-size: 1rem;
+  padding: 0.875rem 2rem;
+  font-size: 0.9rem;
   font-weight: 600;
   border-radius: 12px;
   cursor: pointer;
@@ -377,8 +383,8 @@
   color: var(--text-primary);
   border: 2px solid var(--border-strong);
   box-shadow: none;
-  padding: 1.25rem 3rem;
-  font-size: 1rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.85rem;
   font-weight: 600;
   border-radius: 12px;
   cursor: pointer;
@@ -399,8 +405,8 @@
 /* Button Group */
 .buttonGroup {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.5rem;
   width: 100%;
 }
 
@@ -485,29 +491,36 @@
 /* Responsive Design */
 @media (max-width: 640px) {
   .card {
-    padding: 2rem 1.5rem;
-    border-radius: 20px;
+    padding: 1.25rem 1rem;
+    border-radius: 16px;
   }
 
   .title {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
 
   .subtitle {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
   }
 
   .dayCounter {
-    font-size: 2.5rem;
+    font-size: 1.75rem;
+    margin: 0.5rem 0;
   }
 
   .countdownNumber {
-    font-size: 3rem;
+    font-size: 2rem;
   }
 
   .button {
-    padding: 1.1rem 2.5rem;
-    font-size: 0.95rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.85rem;
+  }
+
+  .logo {
+    width: 50px;
+    margin: 0 auto 0.5rem;
   }
 }
 
