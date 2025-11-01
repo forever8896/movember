@@ -41,6 +41,8 @@ export async function GET(request: NextRequest) {
       currentStreak: user.current_streak,
       longestStreak: user.longest_streak,
       isEarlyBird: user.is_early_bird,
+      displayName: user.display_name,
+      username: user.username,
     });
   } catch (error) {
     console.error("Progress GET error:", error);

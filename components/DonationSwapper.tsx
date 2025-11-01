@@ -305,24 +305,27 @@ export const DonationSwapper = ({
   };
 
   const fontSize = match((dollarAmount || "").toString().length)
-    .with(P.union(6, 7), () => "text-5xl")
-    .with(8, () => "text-4xl")
-    .otherwise(() => "text-6xl");
+    .with(P.union(6, 7), () => "clamp(2.5rem, 8vw, 4rem)")
+    .with(8, () => "clamp(2rem, 6vw, 3rem)")
+    .with(P.number.gte(9), () => "clamp(1.5rem, 5vw, 2.5rem)")
+    .otherwise(() => "clamp(3rem, 10vw, 5rem)");
 
   return (
     <div style={{
       display: "flex",
       flexDirection: "column",
-      gap: "1.5rem"
+      gap: "0.75rem",
+      height: "100%",
+      overflow: "hidden"
     }}>
       {error && (
         <div style={{
           background: "rgba(252, 64, 31, 0.1)",
           border: "2px solid rgba(252, 64, 31, 0.3)",
           color: "#fc401f",
-          padding: "1rem",
-          borderRadius: "12px",
-          fontSize: "0.9rem",
+          padding: "0.5rem",
+          borderRadius: "8px",
+          fontSize: "0.75rem",
           fontWeight: "500"
         }}>
           {error}
@@ -332,8 +335,12 @@ export const DonationSwapper = ({
       {/* Amount Input */}
       <div style={{
         textAlign: "center",
-        padding: "1rem 0"
-      }}>
+        padding: "0.5rem 0",
+        cursor: "text",
+        flexShrink: 0
+      }}
+      onClick={() => inputRef.current?.focus()}
+      >
         <CurrencyInput
           ref={inputRef}
           prefix="$"
@@ -343,16 +350,18 @@ export const DonationSwapper = ({
           onValueChange={(_value, _name, values) =>
             setDollarAmount(values?.float ?? "")
           }
-          className={fontSize}
           style={{
             width: "100%",
             border: "none",
             fontWeight: "700",
+            fontSize: fontSize,
             color: "#0000ff",
             textAlign: "center",
             outline: "none",
             background: "transparent",
-            height: "7rem"
+            height: "auto",
+            cursor: "text",
+            padding: "0.5rem 0"
           }}
         />
       </div>
@@ -361,7 +370,8 @@ export const DonationSwapper = ({
       <div style={{
         display: "grid",
         gridTemplateColumns: "repeat(4, 1fr)",
-        gap: "0.75rem"
+        gap: "0.5rem",
+        flexShrink: 0
       }}>
         {DONATION_DOLLAR_TIERS.map((tier) => (
           <button

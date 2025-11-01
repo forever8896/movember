@@ -1,7 +1,7 @@
 .container {
   height: 100dvh;
-  background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-  color: white;
+  background: var(--background);
+  color: var(--text-primary);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -13,8 +13,7 @@
   width: 100%;
   padding: 0.5rem;
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .header {
@@ -24,7 +23,7 @@
 
 .backButton {
   display: inline-block;
-  color: #0000ff;
+  color: var(--base-blue);
   text-decoration: none;
   font-size: 0.75rem;
   font-weight: 600;
@@ -46,14 +45,14 @@
   font-size: 1.25rem;
   font-weight: bold;
   margin-bottom: 0.25rem;
-  background: linear-gradient(135deg, #0000ff 0%, #0052ff 100%);
+  background: linear-gradient(135deg, var(--base-blue) 0%, var(--base-cerulean) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .subtitle {
-  color: #a0a0a0;
+  color: var(--text-secondary);
   font-size: 0.8rem;
   margin-bottom: 0.75rem;
 }
@@ -66,41 +65,41 @@
 }
 
 .statCard {
-  background: rgba(0, 0, 255, 0.1);
-  border: 1px solid #0000ff;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
   border-radius: 0.5rem;
   padding: 0.65rem 0.5rem;
   text-align: center;
-  box-shadow: 0 0 10px rgba(0, 0, 255, 0.15);
+  box-shadow: var(--shadow-sm);
 }
 
 .statValue {
   font-size: 1rem;
   font-weight: bold;
-  color: #0000ff;
+  color: var(--base-blue);
   margin-bottom: 0.15rem;
 }
 
 .statLabel {
   font-size: 0.6rem;
-  color: #a0a0a0;
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .leaderboardSection {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--surface-elevated);
   border-radius: 0.75rem;
   padding: 0.75rem;
   margin-bottom: 0.5rem;
-  border: 1px solid rgba(0, 0, 255, 0.3);
+  border: 1px solid var(--border);
 }
 
 .sectionTitle {
   font-size: 1rem;
   font-weight: bold;
   margin-bottom: 0.75rem;
-  color: white;
+  color: var(--text-primary);
   text-align: center;
 }
 
@@ -114,18 +113,18 @@
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  background: rgba(0, 0, 255, 0.1);
-  border: 1px solid rgba(0, 0, 255, 0.3);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 0.5rem;
   padding: 0.65rem;
   transition: all 0.2s;
 }
 
 .donorCard:hover {
-  background: rgba(0, 0, 255, 0.15);
-  border-color: rgba(0, 0, 255, 0.5);
+  background: var(--surface-elevated);
+  border-color: var(--base-blue);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 255, 0.2);
+  box-shadow: var(--shadow-md);
 }
 
 .donorRank {
@@ -142,25 +141,25 @@
 .donorName {
   font-weight: 600;
   font-size: 1rem;
-  color: white;
+  color: var(--text-primary);
   margin-bottom: 0.25rem;
 }
 
 .donorStats {
   font-size: 0.875rem;
-  color: #a0a0a0;
+  color: var(--text-secondary);
 }
 
 .donorAmount {
   font-size: 1.25rem;
   font-weight: bold;
-  color: #0000ff;
+  color: var(--base-blue);
 }
 
 .emptyState {
   text-align: center;
   padding: 3rem 1rem;
-  color: #a0a0a0;
+  color: var(--text-secondary);
 }
 
 .emptyState p {

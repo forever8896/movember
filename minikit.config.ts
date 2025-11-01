@@ -28,7 +28,7 @@ export const minikitConfig: ExtendedMiniAppManifest = {
     version: "1",
     name: "Base Movember",
     subtitle: "Grow a Mo, Save a Bro",
-    description: "Snap your mustache daily, share with friends, and support men's health. Track your 30-day Movember journey and donate to fight prostate cancer, testicular cancer, and mental health issues.",
+    description: "Snap your mustache daily and support mens health. Track your Movember journey and donate to fight prostate cancer, testicular cancer, and mental health.",
     screenshotUrls: [`${ROOT_URL}/screenshot-portrait.png`],
     iconUrl: `${ROOT_URL}/blue-icon.png`,
     splashImageUrl: `${ROOT_URL}/blue-hero.png`,
@@ -40,7 +40,7 @@ export const minikitConfig: ExtendedMiniAppManifest = {
     heroImageUrl: `${ROOT_URL}/blue-hero.png`,
     tagline: "Grow a Mo, Save a Bro",
     ogTitle: "Base Movember",
-    ogDescription: "Snap your mustache daily and support men's health with Base Movember. Donate to Movember USA on-chain.",
+    ogDescription: "Track your mustache journey and donate to Movember USA on-chain with Base Movember.",
     ogImageUrl: `${ROOT_URL}/blue-hero.png`,
   },
   baseBuilder: {
