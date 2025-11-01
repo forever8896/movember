@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useQuickAuth, useMiniKit } from "@coinbase/onchainkit/minikit";
+import { useAuthenticate, useMiniKit } from "@coinbase/onchainkit/minikit";
 import Image from "next/image";
 import Link from "next/link";
 import { getMovemberStatus } from "../../lib/movember";
@@ -38,45 +38,28 @@ export default function Gallery() {
     }
   }, [setFrameReady, isFrameReady]);
 
-  // Timeout fallback - if auth takes too long, stop loading
+  const { user } = useAuthenticate();
+
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (loading) {
-        console.warn("Auth timeout - stopping loading state");
+    const fetchProgress = async () => {
+      if (!user?.fid) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/progress?fid=${user.fid}`);
+        const data = await response.json();
+        setProgressData(data);
+      } catch (error) {
+        console.error("Failed to fetch progress:", error);
+      } finally {
         setLoading(false);
       }
-    }, 10000); // 10 second timeout
+    };
 
-    return () => clearTimeout(timeout);
-  }, [loading]);
-
-  const { data: authData } = useQuickAuth<{ user: { fid: number } }>(
-    "/api/auth",
-    { method: "GET" }
-  );
-
-  useEffect(() => {
-    if (authData?.user?.fid) {
-      fetchProgress();
-    } else if (authData && !authData.user) {
-      // Auth completed but failed (error response received)
-      console.error("Authentication failed:", authData);
-      setLoading(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authData]);
-
-  const fetchProgress = async () => {
-    try {
-      const response = await fetch(`/api/progress?fid=${authData?.user?.fid}`);
-      const data = await response.json();
-      setProgressData(data);
-    } catch (error) {
-      console.error("Failed to fetch progress:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    fetchProgress();
+  }, [user]);
 
   if (loading) {
     return (
@@ -106,7 +89,7 @@ export default function Gallery() {
             <h1 className={styles.title}>Gallery</h1>
           </div>
           <div className={styles.error}>
-            {authData && !authData.user
+            {!user
               ? "Authentication required. Please open this in the Farcaster app."
               : "Failed to load gallery. Please try again."}
           </div>

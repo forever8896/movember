@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { useQuickAuth, useMiniKit } from "@coinbase/onchainkit/minikit";
+import { useAuthenticate, useMiniKit } from "@coinbase/onchainkit/minikit";
 import { sdk } from "@farcaster/miniapp-sdk";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,16 +12,6 @@ import {
   getEarlyBirdShareText,
 } from "../lib/movember";
 import styles from "./page.module.css";
-
-interface AuthResponse {
-  success: boolean;
-  user?: {
-    fid: number;
-    issuedAt?: number;
-    expiresAt?: number;
-  };
-  message?: string;
-}
 
 export default function Home() {
   const { isFrameReady, setFrameReady, context } = useMiniKit();
@@ -45,10 +35,7 @@ export default function Home() {
     }
   }, [setFrameReady, isFrameReady]);
 
-  const { data: authData, isLoading: isAuthLoading } = useQuickAuth<AuthResponse>(
-    "/api/auth",
-    { method: "GET" }
-  );
+  const { user } = useAuthenticate();
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -79,7 +66,7 @@ export default function Home() {
     setError("");
 
     try {
-      if (!authData?.user?.fid) {
+      if (!user?.fid) {
         throw new Error("Authentication required. Please reload the app.");
       }
 
@@ -99,7 +86,7 @@ export default function Home() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            fid: authData.user.fid,
+            fid: user.fid,
             castHash: result.cast.hash,
             taggedFriend,
             displayName: context?.user?.displayName,
@@ -136,14 +123,14 @@ export default function Home() {
         throw new Error("Movember is not currently active");
       }
 
-      if (!authData?.user?.fid) {
+      if (!user?.fid) {
         throw new Error("Authentication required. Please reload the app.");
       }
 
       const formData = new FormData();
       formData.append("file", imageFile);
       formData.append("day", movemberStatus.currentDay.toString());
-      formData.append("fid", authData.user.fid.toString());
+      formData.append("fid", user.fid.toString());
       formData.append("displayName", context?.user?.displayName || "");
       formData.append("username", context?.user?.username || "");
 
@@ -163,7 +150,7 @@ export default function Home() {
 
       const shareText = getShareText(movemberStatus.currentDay);
       const appUrl = process.env.NEXT_PUBLIC_URL || "https://movember-lime.vercel.app";
-      const sharePageUrl = `${appUrl}/share/${authData.user.fid}/${movemberStatus.currentDay}`;
+      const sharePageUrl = `${appUrl}/share/${user.fid}/${movemberStatus.currentDay}`;
 
       const result = await sdk.actions.composeCast({
         text: shareText,
@@ -177,7 +164,7 @@ export default function Home() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            fid: authData?.user?.fid,
+            fid: user.fid,
             day: movemberStatus.currentDay,
             castHash: result.cast.hash,
             imageUrl,
@@ -244,7 +231,7 @@ export default function Home() {
             <button
               type="button"
               onClick={handleEarlyBirdCommitment}
-              disabled={uploading || isAuthLoading}
+              disabled={uploading || !user}
               className={styles.button}
             >
               {uploading ? "Posting..." : "I'm In! Share Commitment"}
@@ -341,7 +328,7 @@ export default function Home() {
           <button
             type="button"
             onClick={handleShare}
-            disabled={!imageFile || uploading || isAuthLoading}
+            disabled={!imageFile || uploading || !user}
             className={styles.button}
           >
             {uploading ? uploadStatus || "Processing..." : "Share to Feed"}

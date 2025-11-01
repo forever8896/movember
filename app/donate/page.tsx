@@ -84,104 +84,48 @@ export default function DonatePage() {
           <Image
             src="/logo.png"
             alt="Based Movember"
-            width={60}
-            height={60}
+            width={35}
+            height={35}
             className={styles.logo}
           />
 
-          <h1 className={styles.title}>Support Men&apos;s Health</h1>
-
-          <p className={styles.subtitle}>
-            Hey {context?.user?.displayName || "there"}! Your donation goes
-            directly to Movember Foundation through Endaoment.
-          </p>
-
-          <div className={styles.infoBox}>
-            <div className={styles.infoItem}>
-              <span className={styles.icon}>🏥</span>
-              <div>
-                <strong>Prostate Cancer</strong>
-                <p>Funding research and support</p>
-              </div>
-            </div>
-            <div className={styles.infoItem}>
-              <span className={styles.icon}>🧠</span>
-              <div>
-                <strong>Mental Health</strong>
-                <p>Breaking the silence</p>
-              </div>
-            </div>
-            <div className={styles.infoItem}>
-              <span className={styles.icon}>💙</span>
-              <div>
-                <strong>Testicular Cancer</strong>
-                <p>Early detection saves lives</p>
-              </div>
-            </div>
-          </div>
+          <h1 className={styles.title}>💙 Donate</h1>
         </div>
 
         <div className={styles.donationSection}>
           <div style={{
             background: "var(--surface-elevated)",
-            borderRadius: "1rem",
-            padding: "2rem",
-            border: "2px solid var(--border)",
-            boxShadow: "var(--shadow-lg)",
+            borderRadius: "0.75rem",
+            padding: "0.75rem",
+            border: "1px solid var(--border)",
+            boxShadow: "var(--shadow-sm)",
           }}>
-            <h2 style={{
-              fontSize: "1.5rem",
-              fontWeight: "700",
-              color: "var(--text-primary)",
-              marginBottom: "1.5rem",
-              textAlign: "center"
-            }}>
-              Choose Your Donation Amount
-            </h2>
             <DonationSwapper org={org} onSuccess={handleDonationSuccess} />
           </div>
 
           <div className={styles.footer}>
-            <p className={styles.footerText}>
-              🔒 Secured by{" "}
-              <a
-                href="https://endaoment.org"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Endaoment
-              </a>
-            </p>
-            <p className={styles.footerText}>
-              Donations are made on-chain via smart contracts
-            </p>
             <p style={{
-              fontSize: "0.875rem",
+              fontSize: "0.7rem",
               color: "var(--text-tertiary)",
-              marginTop: "0.75rem",
-              textAlign: "center",
-              lineHeight: "1.6"
-            }}>
-              💡 You can donate with USDC or ETH. If Movember hasn&apos;t been deployed on your chain yet, it will be automatically deployed with your first donation.
-            </p>
-            <div style={{
-              marginTop: "1.5rem",
+              marginBottom: "0.5rem",
               textAlign: "center"
             }}>
-              <Link href="/leaderboard" style={{
-                display: "inline-block",
-                padding: "0.75rem 1.5rem",
-                background: "rgba(0, 0, 255, 0.1)",
-                color: "#0000ff",
-                border: "2px solid rgba(0, 0, 255, 0.3)",
-                borderRadius: "0.75rem",
-                fontWeight: "600",
-                textDecoration: "none",
-                transition: "all 0.2s"
-              }}>
-                🏆 View Donation Leaderboard
-              </Link>
-            </div>
+              Powered by <a href="https://endaoment.org" target="_blank" rel="noopener noreferrer" style={{ color: "var(--base-blue)", textDecoration: "none" }}>Endaoment</a>
+            </p>
+            <Link href="/leaderboard" style={{
+              display: "inline-block",
+              padding: "0.5rem 0.75rem",
+              background: "rgba(0, 0, 255, 0.1)",
+              color: "#0000ff",
+              border: "1px solid rgba(0, 0, 255, 0.3)",
+              borderRadius: "0.5rem",
+              fontSize: "0.75rem",
+              fontWeight: "600",
+              textDecoration: "none",
+              transition: "all 0.2s"
+            }}>
+              🏆 Leaderboard
+            </Link>
           </div>
         </div>
       </div>
