@@ -35,7 +35,7 @@ export async function GET() {
         WHERE table_name = 'donations'
         ORDER BY ordinal_position;
       `;
-      columns = columnQuery.rows;
+      columns = columnQuery.rows as ColumnInfo[];
     }
 
     // Count donations
