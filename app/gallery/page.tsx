@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAuthenticate, useMiniKit } from "@coinbase/onchainkit/minikit";
+import { useMiniKit } from "@coinbase/onchainkit/minikit";
 import Image from "next/image";
 import Link from "next/link";
 import { getMovemberStatus } from "../../lib/movember";
@@ -38,17 +38,17 @@ export default function Gallery() {
     }
   }, [setFrameReady, isFrameReady]);
 
-  const { user } = useAuthenticate();
-
   useEffect(() => {
     const fetchProgress = async () => {
-      if (!user?.fid) {
+      const userFid = context?.user?.fid;
+
+      if (!userFid) {
         setLoading(false);
         return;
       }
 
       try {
-        const response = await fetch(`/api/progress?fid=${user.fid}`);
+        const response = await fetch(`/api/progress?fid=${userFid}`);
         const data = await response.json();
         setProgressData(data);
       } catch (error) {
@@ -59,7 +59,7 @@ export default function Gallery() {
     };
 
     fetchProgress();
-  }, [user]);
+  }, [context]);
 
   if (loading) {
     return (
@@ -89,7 +89,7 @@ export default function Gallery() {
             <h1 className={styles.title}>Gallery</h1>
           </div>
           <div className={styles.error}>
-            {!user
+            {!context?.user?.fid
               ? "Authentication required. Please open this in the Farcaster app."
               : "Failed to load gallery. Please try again."}
           </div>

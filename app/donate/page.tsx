@@ -12,7 +12,7 @@ import Loading from "@/components/Loading";
 import styles from "./donate.module.css";
 
 export default function DonatePage() {
-  const { isFrameReady, setFrameReady, context } = useMiniKit();
+  const { isFrameReady, setFrameReady } = useMiniKit();
   const router = useRouter();
   const [org, setOrg] = useState<NdaoApiOrg | null>(null);
   const [isLoading, setIsLoading] = useState(true);

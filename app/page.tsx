@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { useAuthenticate, useMiniKit } from "@coinbase/onchainkit/minikit";
+import { useMiniKit } from "@coinbase/onchainkit/minikit";
 import { sdk } from "@farcaster/miniapp-sdk";
 import Image from "next/image";
 import Link from "next/link";
@@ -35,8 +35,6 @@ export default function Home() {
     }
   }, [setFrameReady, isFrameReady]);
 
-  const { user } = useAuthenticate();
-
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -66,7 +64,7 @@ export default function Home() {
     setError("");
 
     try {
-      if (!user?.fid) {
+      if (!context?.user?.fid) {
         throw new Error("Authentication required. Please reload the app.");
       }
 
@@ -86,7 +84,7 @@ export default function Home() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            fid: user.fid,
+            fid: context.user.fid,
             castHash: result.cast.hash,
             taggedFriend,
             displayName: context?.user?.displayName,
@@ -123,14 +121,14 @@ export default function Home() {
         throw new Error("Movember is not currently active");
       }
 
-      if (!user?.fid) {
+      if (!context?.user?.fid) {
         throw new Error("Authentication required. Please reload the app.");
       }
 
       const formData = new FormData();
       formData.append("file", imageFile);
       formData.append("day", movemberStatus.currentDay.toString());
-      formData.append("fid", user.fid.toString());
+      formData.append("fid", context.user.fid.toString());
       formData.append("displayName", context?.user?.displayName || "");
       formData.append("username", context?.user?.username || "");
 
@@ -150,7 +148,7 @@ export default function Home() {
 
       const shareText = getShareText(movemberStatus.currentDay);
       const appUrl = process.env.NEXT_PUBLIC_URL || "https://movember-lime.vercel.app";
-      const sharePageUrl = `${appUrl}/share/${user.fid}/${movemberStatus.currentDay}`;
+      const sharePageUrl = `${appUrl}/share/${context.user.fid}/${movemberStatus.currentDay}`;
 
       const result = await sdk.actions.composeCast({
         text: shareText,
@@ -164,7 +162,7 @@ export default function Home() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            fid: user.fid,
+            fid: context.user.fid,
             day: movemberStatus.currentDay,
             castHash: result.cast.hash,
             imageUrl,
@@ -203,18 +201,10 @@ export default function Home() {
 
           <div className={styles.badge}>Early Bird</div>
 
-          <p className={styles.subtitle}>
-            Hey {context?.user?.displayName || "there"}!
-          </p>
-
           <div className={styles.countdown}>
             <div className={styles.countdownNumber}>{daysUntil}</div>
             <div className={styles.countdownLabel}>Days Until Movember</div>
           </div>
-
-          <p className={styles.subtitle}>
-            Commit early and earn your exclusive Early Bird NFT
-          </p>
 
           <div className={styles.form}>
             <input
@@ -231,7 +221,7 @@ export default function Home() {
             <button
               type="button"
               onClick={handleEarlyBirdCommitment}
-              disabled={uploading || !user}
+              disabled={uploading || !context?.user?.fid}
               className={styles.button}
             >
               {uploading ? "Posting..." : "I'm In! Share Commitment"}
@@ -272,16 +262,8 @@ export default function Home() {
 
         <h1 className={styles.title}>Based Movember</h1>
 
-        <p className={styles.subtitle}>
-          Hey {context?.user?.displayName || "there"}!
-        </p>
-
         <p className={styles.dayCounter}>
           Day {movemberStatus.currentDay} of 30
-        </p>
-
-        <p className={styles.subtitle}>
-          Snap your mustache and share to support mens health
         </p>
 
         <div className={styles.form}>
@@ -316,7 +298,7 @@ export default function Home() {
               />
               <label htmlFor="photo-input" className={styles.uploadLabel}>
                 <span>📸</span>
-                <span>Snap or Upload Photo</span>
+                <span>Snap your mustache</span>
               </label>
             </div>
           )}
@@ -328,7 +310,7 @@ export default function Home() {
           <button
             type="button"
             onClick={handleShare}
-            disabled={!imageFile || uploading || !user}
+            disabled={!imageFile || uploading || !context?.user?.fid}
             className={styles.button}
           >
             {uploading ? uploadStatus || "Processing..." : "Share to Feed"}
@@ -345,10 +327,6 @@ export default function Home() {
               🏆 Leaderboard
             </Link>
           </div>
-
-          <p className={styles.helperText}>
-            Your photo will be shared and saved to your gallery
-          </p>
         </div>
       </div>
     </div>
