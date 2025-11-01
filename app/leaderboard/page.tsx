@@ -40,6 +40,11 @@ export default function LeaderboardPage() {
     fetch("/api/leaderboard")
       .then((res) => res.json())
       .then((data) => {
+        if (data.error) {
+          setError(data.error);
+          setIsLoading(false);
+          return;
+        }
         setData(data);
         setIsLoading(false);
       })
@@ -65,7 +70,7 @@ export default function LeaderboardPage() {
     );
   }
 
-  if (error || !data) {
+  if (error || !data || !data.stats || !data.topDonors) {
     return (
       <div className={styles.container}>
         <div className={styles.content}>

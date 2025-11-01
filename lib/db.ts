@@ -448,34 +448,56 @@ export async function getUserTotalDonated(fid: string): Promise<number> {
  * Get top donors leaderboard
  */
 export async function getTopDonors(limit: number = 10) {
-  const result = await sql`
-    SELECT
-      fid,
-      display_name,
-      username,
-      SUM(amount) as total_donated,
-      COUNT(*) as donation_count,
-      MAX(created_at) as last_donation
-    FROM donations
-    GROUP BY fid, display_name, username
-    ORDER BY total_donated DESC
-    LIMIT ${limit}
-  `;
+  try {
+    const result = await sql`
+      SELECT
+        fid,
+        display_name,
+        username,
+        SUM(amount) as total_donated,
+        COUNT(*) as donation_count,
+        MAX(created_at) as last_donation
+      FROM donations
+      GROUP BY fid, display_name, username
+      ORDER BY total_donated DESC
+      LIMIT ${limit}
+    `;
 
-  return result.rows;
+    return result.rows || [];
+  } catch (error) {
+    console.error('Error fetching top donors:', error);
+    return [];
+  }
 }
 
 /**
  * Get community donation stats
  */
 export async function getDonationStats() {
-  const result = await sql`
-    SELECT
-      COUNT(*) as total_donations,
-      COUNT(DISTINCT fid) as unique_donors,
-      COALESCE(SUM(amount), 0) as total_raised
-    FROM donations
-  `;
+  try {
+    const result = await sql`
+      SELECT
+        COUNT(*) as total_donations,
+        COUNT(DISTINCT fid) as unique_donors,
+        COALESCE(SUM(amount), 0) as total_raised
+      FROM donations
+    `;
 
-  return result.rows[0];
+    const stats = result.rows[0];
+
+    // Ensure we always return valid stats with defaults
+    return {
+      total_donations: stats?.total_donations || '0',
+      unique_donors: stats?.unique_donors || '0',
+      total_raised: stats?.total_raised || '0',
+    };
+  } catch (error) {
+    console.error('Error fetching donation stats:', error);
+    // Return default values on error
+    return {
+      total_donations: '0',
+      unique_donors: '0',
+      total_raised: '0',
+    };
+  }
 }

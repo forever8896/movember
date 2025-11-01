@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: "Database initialized successfully",
-      tables: ["users", "daily_photos", "early_birds"],
+      tables: ["users", "daily_photos", "early_birds", "donations"],
     });
   } catch (error) {
     console.error("Database initialization error:", error);
