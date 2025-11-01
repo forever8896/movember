@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useMiniKit } from "@coinbase/onchainkit/minikit";
-import { sdk } from "@farcaster/miniapp-sdk";
 import Image from "next/image";
 import Link from "next/link";
 import { getMovemberStatus } from "../../lib/movember";
@@ -30,7 +29,6 @@ export default function Gallery() {
   const [progressData, setProgressData] = useState<ProgressData | null>(null);
   const [loading, setLoading] = useState(true);
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
-  const [sharing, setSharing] = useState(false);
 
   const movemberStatus = getMovemberStatus();
 
@@ -63,29 +61,6 @@ export default function Gallery() {
 
     fetchProgress();
   }, [context]);
-
-  const handleShareProgress = async () => {
-    if (!context?.user?.fid) return;
-
-    setSharing(true);
-    try {
-      const appUrl = process.env.NEXT_PUBLIC_URL || "https://movember-lime.vercel.app";
-      const journeyUrl = `${appUrl}/journey/${context.user.fid}`;
-      const daysCompleted = progressData?.daysCompleted || 0;
-      const streak = progressData?.currentStreak || 0;
-
-      const shareText = `Day ${daysCompleted}/30 of my Movember journey! 🥸\n${streak > 1 ? `🔥 ${streak} day streak!` : ''}\n\nSupporting men's health with @basedmovember`;
-
-      await sdk.actions.composeCast({
-        text: shareText,
-        embeds: [journeyUrl],
-      });
-    } catch (error) {
-      console.error("Failed to share progress:", error);
-    } finally {
-      setSharing(false);
-    }
-  };
 
   if (loading) {
     return (
@@ -349,43 +324,22 @@ export default function Gallery() {
             </div>
 
             <div style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "0.5rem",
               marginTop: "0.75rem",
               flexShrink: 0
             }}>
-              <button
-                onClick={handleShareProgress}
-                disabled={sharing}
-                style={{
-                  padding: "0.75rem",
-                  background: sharing ? "var(--gray-30)" : "linear-gradient(135deg, #0000ff 0%, #3c8aff 100%)",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "0.5rem",
-                  fontWeight: "700",
-                  fontSize: "0.85rem",
-                  textAlign: "center",
-                  transition: "all 0.2s",
-                  boxShadow: "0 2px 12px rgba(0, 0, 255, 0.4)",
-                  cursor: sharing ? "not-allowed" : "pointer"
-                }}
-              >
-                {sharing ? "Sharing..." : "📤 Share"}
-              </button>
               <Link href="/leaderboard" style={{
                 display: "block",
                 padding: "0.75rem",
-                background: "var(--surface)",
-                color: "var(--text-primary)",
-                border: "1px solid var(--border)",
+                background: "linear-gradient(135deg, #0000ff 0%, #3c8aff 100%)",
+                color: "white",
+                border: "none",
                 textDecoration: "none",
                 borderRadius: "0.5rem",
                 fontWeight: "700",
                 fontSize: "0.85rem",
                 textAlign: "center",
-                transition: "all 0.2s"
+                transition: "all 0.2s",
+                boxShadow: "0 2px 12px rgba(0, 0, 255, 0.4)"
               }}>
                 🏆 Leaderboard
               </Link>

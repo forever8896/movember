@@ -646,44 +646,22 @@ export default function Home() {
               </div>
             ) : hasPostedToday ? (
               <div style={{
-                textAlign: "center",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "0.5rem",
                 padding: "1rem",
                 marginBottom: "0.75rem"
               }}>
-                <div style={{
-                  fontSize: "3rem",
-                  marginBottom: "0.5rem"
-                }}>
-                  ✅
-                </div>
+                <span style={{ fontSize: "1.5rem" }}>✅</span>
                 <h3 style={{
-                  fontSize: "1.1rem",
+                  fontSize: "0.95rem",
                   fontWeight: "700",
                   color: "var(--base-green)",
-                  margin: "0 0 0.5rem 0"
+                  margin: 0
                 }}>
-                  Already Posted Today!
+                  Day {movemberStatus.currentDay ?? 0} Complete!
                 </h3>
-                <p style={{
-                  fontSize: "0.85rem",
-                  color: "var(--text-secondary)",
-                  margin: "0 0 1rem 0"
-                }}>
-                  You&apos;ve completed Day {movemberStatus.currentDay ?? 0}. Come back tomorrow for Day {(movemberStatus.currentDay ?? 0) + 1}!
-                </p>
-                <Link href="/gallery" style={{
-                  display: "inline-block",
-                  padding: "0.75rem 1.5rem",
-                  background: "linear-gradient(135deg, #0000ff 0%, #3c8aff 100%)",
-                  color: "white",
-                  textDecoration: "none",
-                  borderRadius: "0.5rem",
-                  fontWeight: "700",
-                  fontSize: "0.9rem",
-                  boxShadow: "0 2px 12px rgba(0, 0, 255, 0.4)"
-                }}>
-                  📸 View Your Gallery
-                </Link>
               </div>
             ) : (
               <>
