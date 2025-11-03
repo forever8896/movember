@@ -227,13 +227,14 @@ export default function Home() {
   if (earlyBird) {
     return (
       <div className={styles.container} style={{
-        height: "100dvh",
-        overflow: "hidden",
+        minHeight: "100dvh",
+        height: "auto",
+        overflow: "auto",
         display: "flex",
         flexDirection: "column"
       }}>
         <div style={{
-          height: "100%",
+          minHeight: "100%",
           display: "flex",
           flexDirection: "column",
           padding: "0.5rem",
@@ -515,13 +516,14 @@ export default function Home() {
   // November Mode
   return (
     <div className={styles.container} style={{
-      height: "100dvh",
-      overflow: "hidden",
+      minHeight: "100dvh",
+      height: "auto",
+      overflow: "auto",
       display: "flex",
       flexDirection: "column"
     }}>
       <div style={{
-        height: "100%",
+        minHeight: "100%",
         display: "flex",
         flexDirection: "column",
         padding: "0.5rem",

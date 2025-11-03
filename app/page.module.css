@@ -1,12 +1,14 @@
 /* Container & Layout */
 .container {
-  height: 100dvh;
+  min-height: 100dvh;
+  height: auto;
   background: var(--background);
   color: var(--text-primary);
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .container::before {
